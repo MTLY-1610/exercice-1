@@ -1,3 +1,27 @@
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
+
+window.addEventListener('mousedown', onDocumentMouseDown, false);
+
+function onDocumentMouseDown(event) {
+  // Normalize mouse coordinates
+  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+  mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+  // Update the raycaster
+  raycaster.setFromCamera(mouse, camera);
+
+  // Get intersections
+  const intersects = raycaster.intersectObjects(blocks.map(block => block.children[0]), true);
+
+  if (intersects.length > 0) {
+    const clickedBlock = intersects[0].object;
+    console.log('Image clicked:', clickedBlock.material.map.image.src);
+    // Example action: redirect to a new page
+    window.open(clickedBlock.material.map.image.src, '_blank');
+  }
+}
+
 const lenis = new Lenis({
   autoRaf: true,
 });
@@ -6,7 +30,7 @@ const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(
   75,
   window.innerWidth / window.innerHeight,
-  0.1,
+  .1,
   1000
 );
 
@@ -110,8 +134,8 @@ function createCurvedPlane(width, height, radius, segments) {
 }
 
 const numVerticalSections = 20;
-const blocksPerSection = 5;
-const verticalSpacing = 5;
+const blocksPerSection = 10;
+const verticalSpacing = 2;
 const blocks = [];
 
 const totalBlockHeight = numVerticalSections * verticalSpacing;
